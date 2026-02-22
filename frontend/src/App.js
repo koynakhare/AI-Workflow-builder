@@ -1,6 +1,6 @@
-import { PipelineToolbar } from './toolbar';
-import { PipelineUI } from './ui';
-import { SubmitButton } from './submit';
+import { PipelineToolbar } from './components/toolbar';
+import { PipelineUI } from './components/ui';
+import { SubmitButton } from './components/buttons/submit';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 
