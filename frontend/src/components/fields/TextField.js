@@ -1,15 +1,14 @@
-// TextField.js
+const TextField = ({ label, value, onChange, placeholder }) => (
+  <label className="field">
+    {label}
+    <input
+      type="text"
+      className="field__input"
+      value={value ?? ''}
+      onChange={onChange}
+      placeholder={placeholder ?? ''}
+    />
+  </label>
+);
 
-export const TextField = ({ label, value, onChange, placeholder }) => {
-  return (
-    <label>
-      {label}:
-      <input
-        type="text"
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-      />
-    </label>
-  );
-};
+export { TextField };

@@ -1,12 +1,10 @@
-// inputNode.js
-
 import { useState } from 'react';
 import { Position } from 'reactflow';
 import { NodeWrapper } from '../components/NodeWrapper';
 
 export const InputNode = ({ id, data }) => {
-  const [currName, setCurrName] = useState(data?.inputName || id.replace('customInput-', 'input_'));
-  const [inputType, setInputType] = useState(data.inputType || 'Text');
+  const [currName, setCurrName] = useState(data?.inputName ?? id?.replace('customInput-', 'input_'));
+  const [inputType, setInputType] = useState(data?.inputType ?? 'Text');
 
   const fields = [
     {
@@ -14,7 +12,7 @@ export const InputNode = ({ id, data }) => {
       props: {
         label: 'Name',
         value: currName,
-        onChange: (e) => setCurrName(e.target.value),
+        onChange: (e) => setCurrName(e?.target?.value ?? ''),
       },
     },
     {
@@ -22,7 +20,7 @@ export const InputNode = ({ id, data }) => {
       props: {
         label: 'Type',
         value: inputType,
-        onChange: (e) => setInputType(e.target.value),
+        onChange: (e) => setInputType(e?.target?.value ?? ''),
         options: [
           { value: 'Text', label: 'Text' },
           { value: 'File', label: 'File' },
@@ -32,12 +30,15 @@ export const InputNode = ({ id, data }) => {
   ];
 
   const handles = [
+    { type: 'target', position: Position.Left, id: `${id}-target` },
     { type: 'source', position: Position.Right, id: `${id}-value` },
   ];
 
   return (
     <NodeWrapper
+      id={id}
       title="Input"
+      nodeType="customInput"
       handles={handles}
       fields={fields}
     />

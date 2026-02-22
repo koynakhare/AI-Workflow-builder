@@ -1,5 +1,3 @@
-// llmNode.js
-
 import { Position } from 'reactflow';
 import { NodeWrapper } from '../components/NodeWrapper';
 
@@ -12,7 +10,9 @@ export const LLMNode = ({ id }) => {
 
   return (
     <NodeWrapper
+      id={id}
       title="LLM"
+      nodeType="llm"
       handles={handles}
       fields={[]}
     >

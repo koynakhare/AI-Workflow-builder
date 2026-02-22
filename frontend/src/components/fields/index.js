@@ -1,12 +1,13 @@
-// index.js - Field components with renderField function
-
 import { TextField } from './TextField';
+import { TextareaField } from './TextareaField';
 import { SelectField } from './SelectField';
 
-export const renderField = (type, props) => {
+const renderField = (type, props) => {
   switch (type) {
     case 'text':
       return <TextField {...props} />;
+    case 'textarea':
+      return <TextareaField {...props} />;
     case 'select':
       return <SelectField {...props} />;
     default:
@@ -14,5 +15,4 @@ export const renderField = (type, props) => {
   }
 };
 
-export { TextField } from './TextField';
-export { SelectField } from './SelectField';
+export { renderField, TextField, TextareaField, SelectField };

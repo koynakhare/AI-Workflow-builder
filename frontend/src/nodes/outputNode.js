@@ -1,12 +1,10 @@
-// outputNode.js
-
 import { useState } from 'react';
 import { Position } from 'reactflow';
 import { NodeWrapper } from '../components/NodeWrapper';
 
 export const OutputNode = ({ id, data }) => {
-  const [currName, setCurrName] = useState(data?.outputName || id.replace('customOutput-', 'output_'));
-  const [outputType, setOutputType] = useState(data.outputType || 'Text');
+  const [currName, setCurrName] = useState(data?.outputName ?? id?.replace('customOutput-', 'output_'));
+  const [outputType, setOutputType] = useState(data?.outputType ?? 'Text');
 
   const fields = [
     {
@@ -14,7 +12,7 @@ export const OutputNode = ({ id, data }) => {
       props: {
         label: 'Name',
         value: currName,
-        onChange: (e) => setCurrName(e.target.value),
+        onChange: (e) => setCurrName(e?.target?.value ?? ''),
       },
     },
     {
@@ -22,7 +20,7 @@ export const OutputNode = ({ id, data }) => {
       props: {
         label: 'Type',
         value: outputType,
-        onChange: (e) => setOutputType(e.target.value),
+        onChange: (e) => setOutputType(e?.target?.value ?? ''),
         options: [
           { value: 'Text', label: 'Text' },
           { value: 'File', label: 'Image' },
@@ -37,7 +35,9 @@ export const OutputNode = ({ id, data }) => {
 
   return (
     <NodeWrapper
+      id={id}
       title="Output"
+      nodeType="customOutput"
       handles={handles}
       fields={fields}
     />
