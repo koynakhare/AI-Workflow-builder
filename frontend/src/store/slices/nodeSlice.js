@@ -1,5 +1,5 @@
 import { applyNodeChanges } from 'reactflow';
-import { map } from 'lodash';
+import { map, filter } from 'lodash';
 
 export const createNodeSlice = (set, get) => ({
   nodes: [],
@@ -27,5 +27,11 @@ export const createNodeSlice = (set, get) => ({
           : node
       ),
     });
+  },
+  deleteNode: (nodeId) => {
+    const state = get();
+    const newNodes = filter(state?.nodes ?? [], (n) => n?.id !== nodeId);
+    const newEdges = filter(state?.edges ?? [], (e) => e?.source !== nodeId && e?.target !== nodeId);
+    set({ nodes: newNodes, edges: newEdges });
   },
 });

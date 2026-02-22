@@ -1,5 +1,7 @@
+import { useState, useRef, useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
 import { filter } from 'lodash';
+import { useStore } from '../store';
 import { renderField } from './fields';
 
 const NODE_TYPE_CLASS = {
@@ -8,6 +10,8 @@ const NODE_TYPE_CLASS = {
   customOutput: 'output',
   text: 'text',
 };
+
+const HOLD_DURATION_MS = 500;
 
 export const NodeWrapper = ({
   title,
@@ -19,6 +23,10 @@ export const NodeWrapper = ({
   nodeType = 'text',
   id = 'node',
 }) => {
+  const deleteNode = useStore((s) => s?.deleteNode);
+  const [showDelete, setShowDelete] = useState(false);
+  const holdTimerRef = useRef(null);
+
   const leftHandles = filter(handles, (h) => h?.position === Position.Left) ?? [];
   const rightHandles = filter(handles, (h) => h?.position === Position.Right) ?? [];
   const leftHandlesToRender = leftHandles?.length > 0
@@ -29,8 +37,41 @@ export const NodeWrapper = ({
     : [{ type: 'source', position: Position.Right, id: `${id}-source` }];
   const nodeModifier = NODE_TYPE_CLASS[nodeType] ?? 'default';
 
+  const clearHoldTimer = useCallback(() => {
+    if (holdTimerRef?.current) {
+      clearTimeout(holdTimerRef.current);
+      holdTimerRef.current = null;
+    }
+  }, []);
+
+  const handleMouseDown = useCallback(() => {
+    clearHoldTimer();
+    holdTimerRef.current = setTimeout(() => setShowDelete(true), HOLD_DURATION_MS);
+  }, [clearHoldTimer]);
+
+  const handleMouseUp = useCallback(() => clearHoldTimer(), [clearHoldTimer]);
+  const handleMouseLeave = useCallback(() => {
+    clearHoldTimer();
+    setShowDelete(false);
+  }, [clearHoldTimer]);
+
+  const handleDelete = useCallback(
+    (e) => {
+      e?.stopPropagation?.();
+      deleteNode?.(id);
+      setShowDelete(false);
+    },
+    [id, deleteNode]
+  );
+
   return (
-    <div className={`node node--${nodeModifier}`}>
+    <div
+      className="node-wrapper"
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className={`node node--${nodeModifier}`}>
       {leftHandlesToRender?.map((h) => (
         <Handle
           key={h?.id}
@@ -66,6 +107,17 @@ export const NodeWrapper = ({
           style={h?.style}
         />
       ))}
+      </div>
+      {(
+        <button
+          type="button"
+          className="node__delete"
+          onClick={handleDelete}
+          aria-label="Remove node"
+        >
+          ✕
+        </button>
+      )}
     </div>
   );
 };

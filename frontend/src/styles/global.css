@@ -284,6 +284,38 @@ code {
   background: var(--color-input-bg);
 }
 
+.node-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.node__delete {
+  position: absolute;
+  bottom: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: var(--color-node-header);
+  border: 1px solid var(--color-error-text);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.node__delete:hover {
+  background: var(--color-error-text);
+  color: white;
+  transform: translateX(-50%) scale(1.1);
+}
+
 .node-error-wrapper {
   position: relative;
 }
@@ -305,10 +337,10 @@ code {
   left: calc(var(--autocomplete-x, 0) * 1px);
   top: calc(var(--autocomplete-y, 0) * 1px);
   z-index: 1000;
-  background-color: var(--color-dropdown-bg);
-  border: 1px solid var(--color-dropdown-border);
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: var(--color-node-bg);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-field);
+  box-shadow: var(--shadow-node);
   max-height: 200px;
   overflow-y: auto;
   min-width: 200px;
@@ -316,22 +348,24 @@ code {
 
 .autocomplete__header {
   padding: 8px 12px;
-  background-color: var(--color-dropdown-header);
-  border-bottom: 1px solid var(--color-dropdown-header-border);
+  background-color: var(--color-node-header);
+  border-bottom: 1px solid var(--color-border);
   font-weight: bold;
   font-size: 12px;
-  color: #666;
+  color: var(--color-text-primary);
 }
 
 .autocomplete__item {
   padding: 8px 12px;
   cursor: pointer;
-  background-color: white;
-  border-bottom: 1px solid var(--color-dropdown-item-border);
+  background-color: var(--color-node-bg);
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border);
 }
 
+.autocomplete__item:hover,
 .autocomplete__item--selected {
-  background-color: var(--color-dropdown-hover);
+  background-color: var(--color-node-header);
 }
 
 .text-error {
@@ -392,6 +426,12 @@ code {
 
 .edge__path {
   stroke-width: 2;
+  cursor: pointer;
+}
+
+.react-flow__edge.selected .edge__path {
+  stroke-width: 3;
+  stroke: var(--color-llm);
 }
 
 .edge__animated {

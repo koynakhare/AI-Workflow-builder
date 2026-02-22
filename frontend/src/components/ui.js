@@ -101,6 +101,8 @@ export const PipelineUI = () => {
         panOnDrag
         panOnScroll
         panOnScrollMode="free"
+        edgesSelectable
+        deleteKeyCode={['Backspace', 'Delete']}
       >
         <Background color="#2d2d44" gap={GRID_SIZE} size={1} />
         <Controls />
