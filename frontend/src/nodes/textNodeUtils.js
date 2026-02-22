@@ -19,13 +19,28 @@ const TYPE_MAP = {
   customOutput: 'output',
 };
 
-const getNodeDisplayName = (nodeId, nodeType) => {
+const getNodeInternalName = (nodeId, nodeType) => {
   const match = nodeId?.match(/(\w+)-(\d+)/);
   if (!match) return nodeId ?? '';
   const [, type, num] = match;
   const baseName = get(TYPE_MAP, type, type);
   return `${baseName}_${parseInt(num, 10) - 1}`;
 };
+
+const getNodeDisplayName = (node) => {
+  if (!node) return '';
+  const internal = getNodeInternalName(node?.id, node?.type);
+  if (node?.type === 'customInput' && node?.data?.inputName?.trim?.()) {
+    return node.data.inputName.trim();
+  }
+  if (node?.type === 'customOutput' && node?.data?.outputName?.trim?.()) {
+    return node.data.outputName.trim();
+  }
+  return internal;
+};
+
+const isValidVariableIdentifier = (name) =>
+  typeof name === 'string' && /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(name?.trim());
 
 export {
   VARIABLE_REGEX,
@@ -34,4 +49,6 @@ export {
   MIN_HEIGHT,
   NODE_OUTPUTS,
   getNodeDisplayName,
+  getNodeInternalName,
+  isValidVariableIdentifier,
 };

@@ -1,10 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Position } from 'reactflow';
 import { NodeWrapper } from '../components/NodeWrapper';
+import { useNodeActions } from '../store/hooks/useNodes';
+import { getNodeInternalName } from './textNodeUtils';
 
 export const OutputNode = ({ id, data }) => {
-  const [currName, setCurrName] = useState(data?.outputName ?? id?.replace('customOutput-', 'output_'));
+  const { updateNodeField } = useNodeActions();
+  const defaultName = getNodeInternalName(id, 'customOutput');
+  const [currName, setCurrName] = useState(data?.outputName ?? defaultName);
   const [outputType, setOutputType] = useState(data?.outputType ?? 'Text');
+
+  useEffect(() => {
+    if (data?.outputName === undefined || data?.outputName === null) {
+      updateNodeField(id, 'outputName', defaultName);
+    }
+  }, [id, defaultName, data?.outputName, updateNodeField]);
+
+  const handleNameChange = (e) => {
+    const value = e?.target?.value ?? '';
+    setCurrName(value);
+    updateNodeField(id, 'outputName', value);
+  };
 
   const fields = [
     {
@@ -12,7 +28,7 @@ export const OutputNode = ({ id, data }) => {
       props: {
         label: 'Name',
         value: currName,
-        onChange: (e) => setCurrName(e?.target?.value ?? ''),
+        onChange: handleNameChange,
       },
     },
     {

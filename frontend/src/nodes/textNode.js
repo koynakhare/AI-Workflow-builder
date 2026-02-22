@@ -11,6 +11,8 @@ import {
   MIN_HEIGHT,
   NODE_OUTPUTS,
   getNodeDisplayName,
+  getNodeInternalName,
+  isValidVariableIdentifier,
 } from './textNodeUtils';
 
 export const TextNode = ({ id, data }) => {
@@ -62,7 +64,11 @@ export const TextNode = ({ id, data }) => {
       const [, nodeName, outputField] = parts;
       if (!nodeName || !outputField) return { valid: false, error: 'Invalid format' };
       const nodes = getAllNodes();
-      const node = nodes?.find((n) => getNodeDisplayName(n?.id, n?.type) === nodeName?.trim());
+      const node = nodes?.find(
+        (n) =>
+          getNodeInternalName(n?.id, n?.type) === nodeName?.trim() ||
+          getNodeDisplayName(n) === nodeName?.trim()
+      );
       if (!node) return { valid: false, error: `Node "${nodeName}" not found` };
       const outputs = getNodeOutputHandles(node);
       const output = outputs?.find(
@@ -99,16 +105,26 @@ export const TextNode = ({ id, data }) => {
       const nodes = getAllNodes();
       const prefixLower = prefix?.toLowerCase?.()?.trim?.() ?? '';
       return filter(nodes, (node) => {
-        const displayName = getNodeDisplayName(node?.id, node?.type);
-        return !prefixLower || displayName?.toLowerCase?.()?.includes?.(prefixLower);
-      }).map((node) => ({
-        type: 'node',
-        nodeId: node?.id,
-        nodeType: node?.type,
-        displayName: getNodeDisplayName(node?.id, node?.type),
-        label: getNodeDisplayName(node?.id, node?.type),
-        value: getNodeDisplayName(node?.id, node?.type),
-      }));
+        const displayName = getNodeDisplayName(node);
+        const internalName = getNodeInternalName(node?.id, node?.type);
+        return (
+          !prefixLower ||
+          displayName?.toLowerCase?.()?.includes?.(prefixLower) ||
+          internalName?.toLowerCase?.()?.includes?.(prefixLower)
+        );
+      }).map((node) => {
+        const displayName = getNodeDisplayName(node);
+        const internalName = getNodeInternalName(node?.id, node?.type);
+        const value = isValidVariableIdentifier(displayName) ? displayName : internalName;
+        return {
+          type: 'node',
+          nodeId: node?.id,
+          nodeType: node?.type,
+          displayName,
+          label: displayName,
+          value,
+        };
+      });
     },
     [getAllNodes]
   );
@@ -119,15 +135,20 @@ export const TextNode = ({ id, data }) => {
       const prefixLower = prefix?.toLowerCase?.()?.trim?.() ?? '';
       return filter(outputs, (output) =>
         !prefixLower || output?.label?.toLowerCase?.()?.includes?.(prefixLower)
-      ).map((output) => ({
-        type: 'field',
-        nodeId: node?.id,
-        nodeDisplayName: getNodeDisplayName(node?.id, node?.type),
-        fieldId: output?.id,
-        fieldLabel: output?.label,
-        label: output?.label,
-        value: `${getNodeDisplayName(node?.id, node?.type)}.${output?.label}`,
-      }));
+      ).map((output) => {
+        const displayName = getNodeDisplayName(node);
+        const internalName = getNodeInternalName(node?.id, node?.type);
+        const nodePart = isValidVariableIdentifier(displayName) ? displayName : internalName;
+        return {
+          type: 'field',
+          nodeId: node?.id,
+          nodeDisplayName: displayName,
+          fieldId: output?.id,
+          fieldLabel: output?.label,
+          label: output?.label,
+          value: `${nodePart}.${output?.label}`,
+        };
+      });
     },
     [getNodeOutputHandles]
   );
@@ -161,7 +182,11 @@ export const TextNode = ({ id, data }) => {
           const nodeName = parts[0]?.trim?.() ?? '';
           const fieldPrefix = parts[1]?.trim?.() ?? '';
           const nodes = getAllNodes();
-          const node = nodes?.find?.((n) => getNodeDisplayName(n?.id, n?.type) === nodeName);
+          const node = nodes?.find?.(
+            (n) =>
+              getNodeInternalName(n?.id, n?.type) === nodeName ||
+              getNodeDisplayName(n) === nodeName
+          );
           if (node) {
             setSelectedNode(node);
             setAutocompleteStep(2);

@@ -1,10 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Position } from 'reactflow';
 import { NodeWrapper } from '../components/NodeWrapper';
+import { useNodeActions } from '../store/hooks/useNodes';
+import { getNodeInternalName } from './textNodeUtils';
 
 export const InputNode = ({ id, data }) => {
-  const [currName, setCurrName] = useState(data?.inputName ?? id?.replace('customInput-', 'input_'));
+  const { updateNodeField } = useNodeActions();
+  const defaultName = getNodeInternalName(id, 'customInput');
+  const [currName, setCurrName] = useState(data?.inputName ?? defaultName);
   const [inputType, setInputType] = useState(data?.inputType ?? 'Text');
+
+  useEffect(() => {
+    if (data?.inputName === undefined || data?.inputName === null) {
+      updateNodeField(id, 'inputName', defaultName);
+    }
+  }, [id, defaultName, data?.inputName, updateNodeField]);
+
+  const handleNameChange = (e) => {
+    const value = e?.target?.value ?? '';
+    setCurrName(value);
+    updateNodeField(id, 'inputName', value);
+  };
 
   const fields = [
     {
@@ -12,7 +28,7 @@ export const InputNode = ({ id, data }) => {
       props: {
         label: 'Name',
         value: currName,
-        onChange: (e) => setCurrName(e?.target?.value ?? ''),
+        onChange: handleNameChange,
       },
     },
     {
