@@ -19,14 +19,12 @@ const App = () => {
     if (result) {
       setPipelineResult(result);
       setModalOpen(true);
-    } else {
-      toast.error('Could not connect to backend. Make sure the server is running.');
-    }
+    } 
   };
 
   return (
     <div className="app">
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={1000} />
       <PipelineToolbar />
       <PipelineUI />
       <SubmitButton onClick={handleSubmit} />
