@@ -1,5 +1,7 @@
 import { getSmoothStepPath } from 'reactflow';
 
+const EDGE_COLOR = '#6c63ff';
+
 const ColoredEdge = ({
   id,
   sourceX,
@@ -31,18 +33,17 @@ const ColoredEdge = ({
           orient="auto"
           markerUnits="strokeWidth"
         >
-          <path d="M0,0 L0,6 L9,3 z" fill="var(--color-input)" />
+          <path d="M0,0 L0,6 L9,3 z" fill={EDGE_COLOR} />
         </marker>
       </defs>
       <path
         id={id}
         d={edgePath}
         fill="none"
-        stroke="var(--color-input)"
+        stroke={EDGE_COLOR}
         strokeWidth={2}
-        strokeDasharray="6 3"
         markerEnd={`url(#${markerId})`}
-        className="edge__path edge__animated"
+        className="edge__path"
       />
     </>
   );

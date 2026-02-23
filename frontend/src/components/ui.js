@@ -90,7 +90,12 @@ export const PipelineUI = () => {
         onInit={setReactFlowInstance}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
-        defaultEdgeOptions={{ type: 'colored' }}
+        connectionMode="loose"
+        connectionLineStyle={{ stroke: '#6c63ff', strokeWidth: 2 }}
+        defaultEdgeOptions={{
+          type: 'smoothstep',
+          style: { stroke: '#6c63ff', strokeWidth: 2 },
+        }}
         proOptions={proOptions}
         snapGrid={[GRID_SIZE, GRID_SIZE]}
         connectionLineType="smoothstep"

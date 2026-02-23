@@ -1,4 +1,4 @@
-import { filter, map, get } from 'lodash';
+import { get } from 'lodash';
 
 const VARIABLE_REGEX = /\{\{([^}]+)\}\}/g;
 const VARIABLE_FULL_REGEX = /\{\{([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\.\s*([a-zA-Z_$][a-zA-Z0-9_$]*)\}\}/g;

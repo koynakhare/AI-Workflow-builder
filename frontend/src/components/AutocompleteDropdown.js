@@ -34,8 +34,8 @@ const AutocompleteDropdown = ({
       ref={dropdownRef}
       className="autocomplete"
       style={{
-        ['--autocomplete-x']: position?.x ?? 0,
-        ['--autocomplete-y']: position?.y ?? 0,
+        '--autocomplete-x': position?.x ?? 0,
+        '--autocomplete-y': position?.y ?? 0,
       }}
     >
       {step === 1 && <div className="autocomplete__header">Step 1: Select Node</div>}

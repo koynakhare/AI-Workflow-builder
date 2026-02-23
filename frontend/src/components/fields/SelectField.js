@@ -1,6 +1,6 @@
 const SelectField = ({ label, value, onChange, options = [] }) => (
   <label className="field">
-    {label}
+    <span className="field__label">{label}</span>
     <div className="field__select-wrapper">
       <select
         className="field__select"

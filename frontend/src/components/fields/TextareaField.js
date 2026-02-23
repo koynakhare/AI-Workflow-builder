@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 
-const MAX_HEIGHT = 120;
+const MAX_HEIGHT = 480;
 
 const TextareaField = ({
   label,
@@ -22,14 +22,15 @@ const TextareaField = ({
     textarea.style.height = 'auto';
     const scrollHeight = textarea.scrollHeight;
     const scrollWidth = textarea.scrollWidth;
-    const newWidth = Math.max(scrollWidth + 20, minWidth);
-    const cappedHeight = Math.min(Math.max(scrollHeight + 20, minHeight), MAX_HEIGHT);
-    onResize(newWidth, cappedHeight);
+    const newWidth = Math.max(scrollWidth + 24, minWidth);
+    const newHeight = Math.min(Math.max(scrollHeight + 24, minHeight), MAX_HEIGHT);
+    onResize(newWidth, newHeight);
+    textarea.style.height = `${newHeight}px`;
   }, [value, onResize, minWidth, minHeight, textareaRef]);
 
   return (
     <label className="field">
-      {label}
+      <span className="field__label">{label}</span>
       <textarea
         ref={textareaRef}
         className="field__textarea"

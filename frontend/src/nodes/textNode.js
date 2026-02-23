@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { Position, useReactFlow } from 'reactflow';
 import { filter, map } from 'lodash';
 import { NodeWrapper } from '../components/NodeWrapper';
@@ -26,7 +26,7 @@ export const TextNode = ({ id, data }) => {
   const [autocompletePosition, setAutocompletePosition] = useState({ x: 0, y: 0 });
   const [autocompleteSuggestions, setAutocompleteSuggestions] = useState([]);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0);
-  const [selectedNode, setSelectedNode] = useState(null);
+  const [, setSelectedNode] = useState(null);
   const [cursorPosition, setCursorPosition] = useState(0);
   const textareaRef = useRef(null);
   const nodeRef = useRef(null);

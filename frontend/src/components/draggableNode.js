@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useStore } from '../store';
 import { get } from 'lodash';
 
 const TYPE_CONFIG = {
@@ -10,6 +11,8 @@ const TYPE_CONFIG = {
 
 export const DraggableNode = ({ type, label }) => {
   const [isDragging, setIsDragging] = useState(false);
+  const getNodeID = useStore((s) => s?.getNodeID);
+  const addNode = useStore((s) => s?.addNode);
   const config = get(TYPE_CONFIG, type, { buttonClass: '', accentClass: '' });
 
   const onDragStart = (event) => {
@@ -20,12 +23,25 @@ export const DraggableNode = ({ type, label }) => {
 
   const onDragEnd = () => setIsDragging(false);
 
+  const handleClick = () => {
+    const nodeId = getNodeID?.(type);
+    if (!nodeId || !addNode) return;
+    const position = { x: 0, y: 0 };
+    addNode({
+      id: nodeId,
+      type,
+      position,
+      data: { id: nodeId, nodeType: `${type}` },
+    });
+  };
+
   return (
     <div
       className={`toolbar__button ${config.buttonClass} ${isDragging ? 'toolbar__button--dragging' : ''}`}
       draggable
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
+      onClick={handleClick}
     >
       <span className={`toolbar__button-accent ${config.accentClass}`} />
       <span>{label}</span>
