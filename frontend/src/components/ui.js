@@ -100,12 +100,11 @@ export const PipelineUI = () => {
         snapGrid={[GRID_SIZE, GRID_SIZE]}
         connectionLineType="smoothstep"
         fitView
-        minZoom={0.1}
-        maxZoom={2}
+        minZoom={0.25}
+        maxZoom={1}
         defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
         panOnDrag
-        panOnScroll
-        panOnScrollMode="free"
+        zoomOnScroll
         edgesSelectable
         deleteKeyCode={['Backspace', 'Delete']}
       >
