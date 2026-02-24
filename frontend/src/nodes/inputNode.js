@@ -36,7 +36,11 @@ export const InputNode = ({ id, data }) => {
       props: {
         label: 'Type',
         value: inputType,
-        onChange: (e) => setInputType(e?.target?.value ?? ''),
+        onChange: (e) => {
+          const value = e?.target?.value ?? 'Text';
+          setInputType(value);
+          updateNodeField(id, 'inputType', value);
+        },
         options: [
           { value: 'Text', label: 'Text' },
           { value: 'File', label: 'File' },

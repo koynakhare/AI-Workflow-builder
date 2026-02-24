@@ -6,7 +6,10 @@ const MIN_WIDTH = 200;
 const MIN_HEIGHT = 80;
 
 const NODE_OUTPUTS = {
-  customInput: [{ id: 'value', label: 'text' }],
+  customInput: [
+    { id: 'value', label: 'text', inputType: 'Text' },
+    { id: 'value', label: 'file', inputType: 'File' },
+  ],
   llm: [{ id: 'response', label: 'response' }],
   text: [{ id: 'output', label: 'text' }],
   customOutput: [],

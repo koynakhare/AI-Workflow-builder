@@ -48,7 +48,11 @@ export const TextNode = ({ id, data }) => {
   );
 
   const getNodeOutputHandles = useCallback((node) => {
-    const outputs = NODE_OUTPUTS[node?.type] ?? [];
+    let outputs = NODE_OUTPUTS[node?.type] ?? [];
+    if (node?.type === 'customInput' && Array.isArray(outputs)) {
+      const inputType = node?.data?.inputType ?? 'Text';
+      outputs = filter(outputs, (o) => o?.inputType === inputType);
+    }
     return map(outputs, (output) => ({
       id: output?.id,
       label: output?.label,
