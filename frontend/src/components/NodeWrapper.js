@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
 import { filter } from 'lodash';
 import { useStore } from '../store';
@@ -11,7 +11,24 @@ const NODE_TYPE_CLASS = {
   text: 'text',
 };
 
-const HOLD_DURATION_MS = 500;
+const DeleteIcon = () => (
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
+    <polyline points="3 6 5 6 21 6" />
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+    <line x1="10" y1="11" x2="10" y2="17" />
+    <line x1="14" y1="11" x2="14" y2="17" />
+  </svg>
+);
 
 export const NodeWrapper = ({
   title,
@@ -24,8 +41,6 @@ export const NodeWrapper = ({
   id = 'node',
 }) => {
   const deleteNode = useStore((s) => s?.deleteNode);
-  const [showDelete, setShowDelete] = useState(false);
-  const holdTimerRef = useRef(null);
 
   const leftHandles = filter(handles, (h) => h?.position === Position.Left) ?? [];
   const rightHandles = filter(handles, (h) => h?.position === Position.Right) ?? [];
@@ -43,40 +58,16 @@ export const NodeWrapper = ({
       : [{ type: 'source', position: Position.Right, id: `${id}-source` }];
   const nodeModifier = NODE_TYPE_CLASS[nodeType] ?? 'default';
 
-  const clearHoldTimer = useCallback(() => {
-    if (holdTimerRef?.current) {
-      clearTimeout(holdTimerRef.current);
-      holdTimerRef.current = null;
-    }
-  }, []);
-
-  const handleMouseDown = useCallback(() => {
-    clearHoldTimer();
-    holdTimerRef.current = setTimeout(() => setShowDelete(true), HOLD_DURATION_MS);
-  }, [clearHoldTimer]);
-
-  const handleMouseUp = useCallback(() => clearHoldTimer(), [clearHoldTimer]);
-  const handleMouseLeave = useCallback(() => {
-    clearHoldTimer();
-    setShowDelete(false);
-  }, [clearHoldTimer]);
-
   const handleDelete = useCallback(
     (e) => {
       e?.stopPropagation?.();
       deleteNode?.(id);
-      setShowDelete(false);
     },
     [id, deleteNode]
   );
 
   return (
-    <div
-      className="node-wrapper"
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
-    >
+    <div className="node-wrapper">
       <div className={`node node--${nodeModifier}`}>
         {leftHandlesToRender?.map((h) => (
           <Handle
@@ -89,6 +80,14 @@ export const NodeWrapper = ({
         ))}
         <div className="node__header">
           <span>{title}</span>
+          <button
+            type="button"
+            className="node__delete"
+            onClick={handleDelete}
+            aria-label="Remove node"
+          >
+            <DeleteIcon />
+          </button>
         </div>
         <div className="node__body">
           {children}
@@ -112,16 +111,6 @@ export const NodeWrapper = ({
           />
         ))}
       </div>
-      {showDelete && (
-        <button
-          type="button"
-          className="node__delete"
-          onClick={handleDelete}
-          aria-label="Remove node"
-        >
-          ✕
-        </button>
-      )}
     </div>
   );
 };

@@ -35,12 +35,13 @@ const selector = (state) => ({
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
+  onEdgeUpdate: state.onEdgeUpdate,
 });
 
 export const PipelineUI = () => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const { nodes, edges, getNodeID, addNode, onNodesChange, onEdgesChange, onConnect } =
+  const { nodes, edges, getNodeID, addNode, onNodesChange, onEdgesChange, onConnect, onEdgeUpdate } =
     useStore(selector, shallow);
 
   const getInitNodeData = (nodeID, type) => ({ id: nodeID, nodeType: `${type}` });
@@ -85,6 +86,8 @@ export const PipelineUI = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onEdgeUpdate={onEdgeUpdate}
+        edgesUpdatable
         onDrop={onDrop}
         onDragOver={onDragOver}
         onInit={setReactFlowInstance}
@@ -93,7 +96,9 @@ export const PipelineUI = () => {
         connectionMode="loose"
         connectionLineStyle={{ stroke: '#6c63ff', strokeWidth: 2 }}
         defaultEdgeOptions={{
-          type: 'smoothstep',
+          type: 'colored',
+          animated: true,
+          updatable: true,
           style: { stroke: '#6c63ff', strokeWidth: 2 },
         }}
         proOptions={proOptions}
