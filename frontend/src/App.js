@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 import { useStore } from './store';
 import { PipelineToolbar } from './components/toolbar';
 import { PipelineUI } from './components/ui';
